@@ -7,6 +7,8 @@ MoView by hyouuu, made for Pendo, based on SPUserResizableView.    It is a movab
 [![License](https://img.shields.io/cocoapods/l/MoView.svg?style=flat)](http://cocoapods.org/pods/MoView)
 [![Platform](https://img.shields.io/cocoapods/p/MoView.svg?style=flat)](http://cocoapods.org/pods/MoView)
 
+![alt tag](intro.gif)
+
 ## Usage
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
