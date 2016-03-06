@@ -11,9 +11,72 @@ MoView by hyouuu, made for Pendo, based on SPUserResizableView.    It is a movab
 
 ## Usage
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+In your view controller,
+```swift
+import MoView
+class YourViewController: UIViewController, MoViewDelegate {
+  // Get a hold of MoViews
+  var mediaViews = [MoView]()
+  
+  // Example setup
+  let imageFrame = CGRectMake(posX, posY, width, height)
+  let mediaView = MoView(frame: imageFrame)
+  mediaView.copyItemTitle = local("copy")
+  mediaView.saveItemTitle = local("save")
+  mediaView.deleteItemTitle = local("delete")
+  let imageView = UIImageView(image:image)
+  imageView.alpha = 0.9
+  mediaView.contentView = imageView
+  mediaView.delegate = self
+  textView.addSubview(mediaView)
+  mediaViews.append(mediaView)
+ 
+ // MARK: MoViewDelegate with example usages
 
-## Requirements
+  func moViewTapped(moView: MoView) {
+    log("moViewTapped")
+  }
+
+  func moViewDidBeginEditing(moView: MoView) {
+    log("moViewDidBeginEditing")
+    textView.bringSubviewToFront(moView)
+  }
+
+  func moViewDidEndEditing(moView: MoView, edited: Bool) {
+    log("moViewDidEndEditing")
+  }
+
+  func moViewCopyTapped(moView: MoView) {
+    if let imageView = moView.contentView as? UIImageView {
+      if let image = imageView.image {
+        let pasteboard = UIPasteboard.generalPasteboard()
+        if let data = UIImagePNGRepresentation(image) {
+          pasteboard.setData(data, forPasteboardType: "public.png")
+          return
+        }
+      }
+    }
+    assertionFailure("copyItem failed")
+  }
+
+  func moViewSaveTapped(moView: MoView) {
+    if let imageView = moView.contentView as? UIImageView {
+      if let image = imageView.image {
+        Photor.one.saveImage(image)
+      }
+    }
+  }
+
+  func moViewDeleteTapped(moView: MoView) {
+    log("moViewDeleteTapped")
+    if let media = moView.media {
+      rlmDelete(media as! MediaR, ownerNote: note)
+    }
+    mediaViews.removeObject(moView)
+    moView.removeFromSuperview()
+  }
+  
+```
 
 ## Installation
 
