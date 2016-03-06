@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MoView"
-  s.version          = "0.1.0"
+  s.version          = "0.1.1"
   s.summary          = "MoView is a movable, resizable view, with special attention to be used with UIImage, thus providing Save, Copy and Delete menu options."
 
 # This description is used to generate tags and improve search results.

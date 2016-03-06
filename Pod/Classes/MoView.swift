@@ -19,27 +19,36 @@ class MoView: UIView, UIGestureRecognizerDelegate {
 
   // MARK: Public vars
 
-  static var minWidth = 60.f
-  static var minHeight = 60.f
+  static var minWidth: CGFloat = 60
+  static var minHeight: CGFloat = 60
 
   weak var delegate: MoViewDelegate?
 
   // Outside view for touch
-  var edgeInset = 1.f
+  var edgeInset: CGFloat = 1
 
   // Where touch is considered dragging bound and will cause resizing
-  var boundMargin = 50.f
+  var boundMargin: CGFloat = 50
 
   // Whether keeping view's original ratio while resizing
   var keepRatio = true
 
   // The touch point's distance to cetner must be factored and still greater
   // than distance to a corner to start resizing - factor higher resize easier.
-  let resizeDistanceToCenterFactor = 0.5.f
-
+  let resizeDistanceToCenterFactor: CGFloat = 0.5
 
   // Disables the user from dragging the view outside the parent view's bounds.
   var preventsPositionOutsideSuperview = false
+
+  // Toggles for each menu item
+  var enableCopy = true
+  var enableSave = true
+  var enableDelete = true
+
+  // Should provide localized titles for i18n
+  var copyItemTitle = "Copy"
+  var saveItemTitle = "Save"
+  var deleteItemTitle = "Delete"
 
   // The actual view to be assigned from client
   var contentView: UIView? {
@@ -52,7 +61,7 @@ class MoView: UIView, UIGestureRecognizerDelegate {
       if let contentView = contentView {
         contentView.frame = CGRectInset(self.bounds, edgeInset, edgeInset);
         contentView.layer.cornerRadius = 9
-        contentView.layer.masksToBounds = YES
+        contentView.layer.masksToBounds = true
         addSubview(contentView)
       }
     }
@@ -128,6 +137,13 @@ class MoView: UIView, UIGestureRecognizerDelegate {
   private var curAnchor: MoViewAnchor?
 
   private var touchStart: CGPoint?
+
+  // Helper for fast distance comparison
+  private func distSquared(a: CGPoint, b: CGPoint) -> CGFloat {
+    let dx = (b.x - a.x)
+    let dy = (b.y - a.y)
+    return (dx * dx) + (dy * dy)
+  }
 
   private func anchorForTouchLoc(touchPoint: CGPoint) -> MoViewAnchor {
     let width = bounds.width
@@ -485,6 +501,10 @@ class MoView: UIView, UIGestureRecognizerDelegate {
       return
     }
 
+    if !enableCopy && !enableSave && !enableDelete {
+      return
+    }
+
     self.becomeFirstResponder()
 
     let menuController = UIMenuController.sharedMenuController()
@@ -492,10 +512,20 @@ class MoView: UIView, UIGestureRecognizerDelegate {
       return
     }
 
-    let copyItem = UIMenuItem(title: local("copy"), action: "copyItem")
-    let saveItem = UIMenuItem(title: local("save"), action: "saveItem")
-    let deleteItem = UIMenuItem(title: local("delete"), action: "deleteItem")
-    menuController.menuItems = [copyItem, saveItem, deleteItem]
+    let copyItem = UIMenuItem(title: copyItemTitle, action: "copyItem")
+    let saveItem = UIMenuItem(title: saveItemTitle, action: "saveItem")
+    let deleteItem = UIMenuItem(title: deleteItemTitle, action: "deleteItem")
+    var items = [UIMenuItem]()
+    if enableCopy {
+      items.append(copyItem)
+    }
+    if enableSave {
+      items.append(saveItem)
+    }
+    if enableDelete {
+      items.append(deleteItem)
+    }
+    menuController.menuItems = items
     menuController.setTargetRect(contentView!.frame, inView: self)
     menuController.setMenuVisible(true, animated: true)
   }
@@ -517,7 +547,7 @@ class MoView: UIView, UIGestureRecognizerDelegate {
   }
 
   override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-    // You need to only return true for the actions you want, otherwise you get the whole range of iOS actions. You can see this by just removing the if statement here.
+    // Need to only return true for the actions desired, otherwise will get the whole range of iOS actions.
     if action == Selector("copyItem") ||
       action == Selector("saveItem") ||
       action == Selector("deleteItem")

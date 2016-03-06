@@ -1,6 +1,0 @@
-framework module MoView {
-  umbrella header "MoView-umbrella.h"
-
-  export *
-  module * { export * }
-}
