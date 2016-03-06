@@ -6,7 +6,7 @@
   MoView will call superview.endEditing() when receiving touch; client should call endEditing on any other firstResponder, or it might cancel MoView's touch abruptly
 */
 
-protocol MoViewDelegate: class {
+public protocol MoViewDelegate: class {
   func moViewDidBeginEditing(moView: MoView)
   func moViewDidEndEditing(moView: MoView, edited: Bool)
   func moViewTapped(moView: MoView)
@@ -15,43 +15,47 @@ protocol MoViewDelegate: class {
   func moViewDeleteTapped(moView: MoView)
 }
 
-class MoView: UIView, UIGestureRecognizerDelegate {
+public class MoView: UIView, UIGestureRecognizerDelegate {
 
   // MARK: Public vars
 
-  static var minWidth: CGFloat = 60
-  static var minHeight: CGFloat = 60
+  public static var minWidth: CGFloat = 60
+  public static var minHeight: CGFloat = 60
 
-  weak var delegate: MoViewDelegate?
+  public weak var delegate: MoViewDelegate?
 
   // Outside view for touch
-  var edgeInset: CGFloat = 1
+  public var edgeInset: CGFloat = 1
 
   // Where touch is considered dragging bound and will cause resizing
-  var boundMargin: CGFloat = 50
+  public var boundMargin: CGFloat = 50
 
   // Whether keeping view's original ratio while resizing
-  var keepRatio = true
+  public var keepRatio = true
 
   // The touch point's distance to cetner must be factored and still greater
   // than distance to a corner to start resizing - factor higher resize easier.
-  let resizeDistanceToCenterFactor: CGFloat = 0.5
+  public var resizeDistanceToCenterFactor: CGFloat = 0.5
 
   // Disables the user from dragging the view outside the parent view's bounds.
-  var preventsPositionOutsideSuperview = false
+  public var preventsPositionOutsideSuperview = false
 
   // Toggles for each menu item
-  var enableCopy = true
-  var enableSave = true
-  var enableDelete = true
+  public var enableCopy = true
+  public var enableSave = true
+  public var enableDelete = true
+
+  // Holds to an original media object for the view, e.g. a media object in DB.
+  // It's more like a convenient link, and not necessarily useful to every instance
+  public var media: AnyObject?
 
   // Should provide localized titles for i18n
-  var copyItemTitle = "Copy"
-  var saveItemTitle = "Save"
-  var deleteItemTitle = "Delete"
+  public var copyItemTitle = "Copy"
+  public var saveItemTitle = "Save"
+  public var deleteItemTitle = "Delete"
 
   // The actual view to be assigned from client
-  var contentView: UIView? {
+  public var contentView: UIView? {
     willSet {
       if let contentView = contentView {
         contentView.removeFromSuperview()
@@ -67,18 +71,14 @@ class MoView: UIView, UIGestureRecognizerDelegate {
     }
   }
 
-  override var frame: CGRect {
+  override public var frame: CGRect {
     didSet {
       contentView?.frame = CGRectInset(self.bounds, edgeInset, edgeInset);
       initialViewSize = self.bounds.size
     }
   }
 
-  // Holds to an original media object for the view, e.g. a media object in DB.
-  // It's more like a convenient link, and not necessarily useful to every instance
-  var media: AnyObject?
-
-  override init(frame: CGRect) {
+  override public init(frame: CGRect) {
     super.init(frame: frame)
 
     let longPress = UILongPressGestureRecognizer(target: self, action: "longPress:")
@@ -88,7 +88,7 @@ class MoView: UIView, UIGestureRecognizerDelegate {
     addGestureRecognizer(pinch)
   }
 
-  required init?(coder aDecoder: NSCoder) {
+  required public init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
@@ -389,12 +389,12 @@ class MoView: UIView, UIGestureRecognizerDelegate {
 
   // MARK: UIGestureRecognizerDelegate
 
-  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool
+  public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool
   {
     return true
   }
   
-  override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+  override public func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
     // If a e.g. UITextView isFirstResponder, the touch might be cancelled abruptly
     superview?.endEditing(true)
     delegate?.moViewDidBeginEditing(self)
@@ -414,7 +414,7 @@ class MoView: UIView, UIGestureRecognizerDelegate {
     }
   }
 
-  override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+  override public func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
     if curAnchor == nil || superview == nil {
       assertionFailure("Shouldn't be nil")
       return
@@ -440,7 +440,7 @@ class MoView: UIView, UIGestureRecognizerDelegate {
     }
   }
 
-  override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+  override public func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
     delegate?.moViewDidEndEditing(self, edited: !isValidTap)
 
     if isValidTap {
@@ -448,7 +448,7 @@ class MoView: UIView, UIGestureRecognizerDelegate {
     }
   }
 
-  override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+  override public func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
     delegate?.moViewDidEndEditing(self, edited: !isValidTap)
   }
 
@@ -542,11 +542,11 @@ class MoView: UIView, UIGestureRecognizerDelegate {
     delegate?.moViewDeleteTapped(self)
   }
 
-  override func canBecomeFirstResponder() -> Bool {
+  override public func canBecomeFirstResponder() -> Bool {
     return true
   }
 
-  override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+  override public func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
     // Need to only return true for the actions desired, otherwise will get the whole range of iOS actions.
     if action == Selector("copyItem") ||
       action == Selector("saveItem") ||
