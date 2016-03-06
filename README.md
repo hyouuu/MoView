@@ -11,9 +11,11 @@ MoView by hyouuu, made for Pendo, based on SPUserResizableView.    It is a movab
 
 ## Usage
 
-In your view controller,
+In your view controller:
+
 ```swift
 import MoView
+
 class YourViewController: UIViewController, MoViewDelegate {
   // Get a hold of MoViews
   var mediaViews = [MoView]()
@@ -31,8 +33,8 @@ class YourViewController: UIViewController, MoViewDelegate {
   textView.addSubview(mediaView)
   mediaViews.append(mediaView)
  
- // MARK: MoViewDelegate with example usages
-
+  // Implement MoViewDelegate - provided some example usages below
+  // MARK: MoViewDelegate 
   func moViewTapped(moView: MoView) {
     log("moViewTapped")
   }
