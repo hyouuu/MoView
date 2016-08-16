@@ -548,7 +548,7 @@ public class MoView: UIView, UIGestureRecognizerDelegate {
         return true
     }
     
-    override public func canPerformAction(_ action: Selector, withSender sender: AnyObject?) -> Bool {
+    override public func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         // Need to only return true for the actions desired, otherwise will get the whole range of iOS actions.
         if action == #selector(MoView.copyItem) ||
             action == #selector(MoView.saveItem) ||
