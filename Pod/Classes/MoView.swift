@@ -1,9 +1,11 @@
 /*
+ 
  MoView by hyouuu, made for Pendo, based on SPUserResizableView.
  
  It is a movable, resizable view, with special attention to be used with UIImage, thus providing Save, Copy and Delete menu options.
  
  MoView will call superview.endEditing() when receiving touch; client should call endEditing on any other firstResponder, or it might cancel MoView's touch abruptly
+ 
  */
 
 public protocol MoViewDelegate: class {
@@ -17,36 +19,41 @@ public protocol MoViewDelegate: class {
 
 open class MoView: UIView, UIGestureRecognizerDelegate {
     
-    // MARK: Public vars
-    
-    // Static setup
+    // MARK: Static costants
     open static var defaultMinX: CGFloat = -100
     open static var defaultMinY: CGFloat = -100
     
-    open static var minWidth: CGFloat = 60
-    open static var minHeight: CGFloat = 60
+    open static var defaultMinWidth: CGFloat = 60
+    open static var defaultMinHeight: CGFloat = 60
     
-    // Delegate & toggles
+    // MARK: Public vars
+    
     open weak var delegate: MoViewDelegate?
     
+    // Editing switches
     open var enableMoving = true
     open var enableResizing = true
     
-    // Toggles for each menu item
+    // Menu switches
     open var enableCopy = true
     open var enableSave = true
     open var enableDelete = true
     
-    // Per instance settings
+    // Positions
     open var minX: CGFloat = MoView.defaultMinX
     open var minY: CGFloat = MoView.defaultMinY
+    open var minWidth: CGFloat = MoView.defaultMinWidth
+    open var minHeight: CGFloat = MoView.defaultMinHeight
     
-    // Outside view for touch
+    // Edge inset for touch detection
     open var edgeInset: CGFloat = 1
     
-    // Where touch is considered dragging bound and will cause resizing
+    // Border dragging (resizing) vs inner dragging (moving)
     open var boundMargin: CGFloat = 50
-    open var boundPad: CGFloat = 10 // Pad beyond the boundMargin to sense touch
+    // Pad beyond the boundMargin to sense (resizing) touch
+    open var boundPad: CGFloat = 10
+    
+    var cornerRadius: CGFloat = 9.0
     
     // Whether keeping view's original ratio while resizing
     open var keepRatio = true
@@ -59,12 +66,12 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
     open var preventsPositionOutsideSuperview = false
     
     // Should provide localized titles for i18n
-    open var copyItemTitle = "Copy"
-    open var saveItemTitle = "Save"
-    open var deleteItemTitle = "Delete"
+    open var copyItemTitle = NSLocalizedString("Copy", comment: "")
+    open var saveItemTitle = NSLocalizedString("Save", comment: "")
+    open var deleteItemTitle = NSLocalizedString("Delete", comment: "")
     
     // Holds to an original media object for the view, e.g. a media object in DB.
-    // It's more like a convenient link, and not necessarily useful to every instance
+    // It's more like a convenient link, and probably not useful for every instance
     open var media: Any?
     
     // The actual view to be assigned from client
@@ -77,19 +84,14 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         didSet {
             if let contentView = contentView {
                 contentView.frame = self.bounds.insetBy(dx: edgeInset, dy: edgeInset);
-                contentView.layer.cornerRadius = 9
+                contentView.layer.cornerRadius = cornerRadius
                 contentView.layer.masksToBounds = true
                 addSubview(contentView)
             }
         }
     }
     
-    override open var frame: CGRect {
-        didSet {
-            contentView?.frame = self.bounds.insetBy(dx: edgeInset, dy: edgeInset);
-            initialViewSize = self.bounds.size
-        }
-    }
+    // MARK: Lifecycle
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -107,6 +109,13 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: nil, object: nil)
+    }
+    
+    override open var frame: CGRect {
+        didSet {
+            contentView?.frame = self.bounds.insetBy(dx: edgeInset, dy: edgeInset);
+            initialViewSize = self.bounds.size
+        }
     }
     
     // MARK: Privates
@@ -288,15 +297,15 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         
         // (4) If the new frame is too small, cancel the changes.
         if keepRatio {
-            if newWidth < MoView.minWidth || newHeight < MoView.minHeight {
+            if newWidth < minWidth || newHeight < minHeight {
                 return
             }
         } else {
-            if newWidth < MoView.minWidth {
+            if newWidth < minWidth {
                 newWidth = self.frame.size.width;
                 newX = self.frame.origin.x;
             }
-            if newHeight < MoView.minHeight {
+            if newHeight < minHeight {
                 newHeight = self.frame.size.height;
                 newY = self.frame.origin.y;
             }
@@ -321,13 +330,13 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
                     deltaW = self.frame.origin.x - superX
                     newWidth = self.frame.size.width + deltaW;
                     newX = superX
-                    newWidth = max(newWidth, MoView.minWidth)
+                    newWidth = max(newWidth, minWidth)
                 }
                 // right
                 if (newX + newWidth > superX + superviewContentWidth() &&
                     self.frame.size.width != newWidth) {
                     newWidth = superviewContentWidth() - newX;
-                    newWidth = max(newWidth, MoView.minWidth)
+                    newWidth = max(newWidth, minWidth)
                 }
                 // top
                 if (newY < superY && self.frame.origin.y != newY ) {
@@ -335,13 +344,13 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
                     deltaH = self.frame.origin.y - superY
                     newHeight = self.frame.size.height + deltaH;
                     newY = superY
-                    newHeight = max(newHeight, MoView.minHeight)
+                    newHeight = max(newHeight, minHeight)
                 }
                 // bottom
                 if (newY + newHeight > superviewContentHeight() &&
                     self.frame.size.height != newHeight) {
                     newHeight = superviewContentHeight() - newY;
-                    newHeight = max(newHeight, MoView.minHeight)
+                    newHeight = max(newHeight, minHeight)
                 }
             }
         } else { // even without the option, don't want image completely out of screen
@@ -578,9 +587,9 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
     
     override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         // Need to only return true for the actions desired, otherwise will get the whole range of iOS actions.
-        if action == #selector(MoView.copyItem) ||
-            action == #selector(MoView.saveItem) ||
-            action == #selector(MoView.deleteItem)
+        if action == #selector(self.copyItem) ||
+            action == #selector(self.saveItem) ||
+            action == #selector(self.deleteItem)
         {
             return true
         }
