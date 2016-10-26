@@ -1,5 +1,9 @@
 # MoView
 
+* For Swift 3 with CocoaPod, please use:
+* pod 'MoView', :git => 'https://github.com/hyouuu/MoView.git'
+* As the CocoaPod central repo trunk push doesn't work with the Xcode beta yet
+
 MoView by hyouuu, made for Pendo, based on [SPUserResizableView](https://github.com/spoletto/SPUserResizableView).    
 
 It is a movable, resizable view, with special attention to be used with UIImage, thus providing Save, Copy and Delete menu options.
