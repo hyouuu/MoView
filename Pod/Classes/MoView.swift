@@ -158,16 +158,16 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
     // Used to determine which components of the bounds we'll be modifying, based upon where the user's touch started.
     private var curAnchor: MoViewAnchor?
     
-    fileprivate var touchStart: CGPoint?
+    private var touchStart: CGPoint?
     
     // Helper for fast distance comparison
-    fileprivate func distSquared(_ a: CGPoint, b: CGPoint) -> CGFloat {
+    private func distSquared(_ a: CGPoint, b: CGPoint) -> CGFloat {
         let dx = (b.x - a.x)
         let dy = (b.y - a.y)
         return (dx * dx) + (dy * dy)
     }
     
-    fileprivate func anchorForTouchLoc(_ touchPoint: CGPoint) -> MoViewAnchor {
+    private func anchorForTouchLoc(_ touchPoint: CGPoint) -> MoViewAnchor {
         let width = bounds.width
         let height = bounds.height
         let centerPoint = CGPoint(x: width / 2, y: height / 2)
@@ -200,7 +200,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         return smallestDist < centerDist * resizeDistanceToCenterFactor ? closestAnchor : noAnchor
     }
     
-    fileprivate func superviewContentWidth() -> CGFloat {
+    private func superviewContentWidth() -> CGFloat {
         guard let superview = superview else {
             return 0
         }
@@ -213,7 +213,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         return boundWidth
     }
     
-    fileprivate func superviewContentHeight() -> CGFloat {
+    private func superviewContentHeight() -> CGFloat {
         guard let superview = superview else {
             return 0
         }
@@ -226,7 +226,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         return boundHeight
     }
     
-    fileprivate func resizeUsingTouchLoc(_ touchPoint: CGPoint) {
+    private func resizeUsingTouchLoc(_ touchPoint: CGPoint) {
         var touchPoint = touchPoint
         if let anchor = curAnchor, let touchStart = touchStart {
             // (1) Update the touch point if we're outside the superview.
@@ -258,7 +258,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    fileprivate func resizeWith(
+    private func resizeWith(
         _ deltaW: CGFloat,
         deltaX: CGFloat,
         deltaH: CGFloat,
@@ -366,9 +366,9 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         self.frame = CGRect(x: newX, y: newY, width: newWidth, height: newHeight);
     }
     
-    fileprivate func translateUsingTouchLoc(_ touchPoint: CGPoint) {
+    private func translateUsingTouchLoc(_ touchPoint: CGPoint) {
         guard let touchStart = touchStart,
-            let superview = superview else
+            let _ = superview else
         {
             assertionFailure("touchStart & superview should be present")
             return
