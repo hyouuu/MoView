@@ -391,7 +391,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         let maxCenterX = superviewContentWidth() - horizontalMargin + halfWidth
         
         let minCenterY = max(minY + halfHeight, 0 + verticalMargin - halfHeight)
-        let maxCenterY = superviewContentHeight() - verticalMargin + halfWidth
+        let maxCenterY = superviewContentHeight() - verticalMargin + halfHeight
         
         guard minCenterX <= maxCenterX, minCenterY <= maxCenterY else {
             assertionFailure("Condition not right: minCenterX:\(minCenterX) maxCenterX:\(maxCenterX) minCenterY:\(minCenterY) maxCenterY:\(maxCenterY) ")
@@ -526,7 +526,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         resizeWith(deltaW, deltaX: deltaX, deltaH: deltaH, deltaY: deltaY)
     }
     
-    // MARK: UIMenu 
+    // MARK: UIMenu
     
     func longPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if gestureRecognizer.state == .began {
