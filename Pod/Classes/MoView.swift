@@ -354,10 +354,10 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
                 }
             }
         } else { // even without the option, don't want image completely out of screen
-            if ((newX > superview!.bounds.width - boundMargin) ||
-                (newX + newWidth < boundMargin) ||
-                (newY > superview!.bounds.height - boundMargin) ||
-                (newY + newHeight < boundMargin))
+            if ((newX + newWidth > frame.maxX && newX > superview!.bounds.width - boundMargin) ||
+                (newX + newWidth < frame.maxX && newX + newWidth < boundMargin) ||
+                (newY + newHeight > frame.maxY && newY > superview!.bounds.height - boundMargin) ||
+                (newY + newHeight < frame.maxY && newHeight < boundMargin))
             {
                 return;
             }
