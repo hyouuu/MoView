@@ -24,7 +24,7 @@ class YourViewController: UIViewController, MoViewDelegate {
   var mediaViews = [MoView]()
   
   // Example setup
-  let imageFrame = CGRectMake(posX, posY, width, height)
+  let imageFrame = CGRect(x: posX, y: posY, width: width, height: height)
   let mediaView = MoView(frame: imageFrame)
   mediaView.copyItemTitle = local("copy")
   mediaView.saveItemTitle = local("save")
@@ -44,7 +44,7 @@ class YourViewController: UIViewController, MoViewDelegate {
 
   func moViewDidBeginEditing(moView: MoView) {
     log("moViewDidBeginEditing")
-    textView.bringSubviewToFront(moView)
+    textView.bringSubview(toFront: moView)
   }
 
   func moViewDidEndEditing(moView: MoView, edited: Bool) {
