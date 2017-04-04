@@ -32,7 +32,8 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
     
     // Editing switches
     open var enableMoving = true
-    open var enableResizing = true
+    open var enablePinchResizing = true
+    open var enableDragResizing = false
     
     // Menu switches
     open var enableCopy = true
@@ -354,10 +355,10 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
                 }
             }
         } else { // even without the option, don't want image completely out of screen
-            if ((newX + newWidth > frame.maxX && newX > superview!.bounds.width - boundMargin) ||
-                (newX + newWidth < frame.maxX && newX + newWidth < boundMargin) ||
-                (newY + newHeight > frame.maxY && newY > superview!.bounds.height - boundMargin) ||
-                (newY + newHeight < frame.maxY && newHeight < boundMargin))
+            if ((newX > superview!.bounds.width - boundMargin) ||
+                (newX + newWidth < boundMargin) ||
+                (newY > superview!.bounds.height - boundMargin) ||
+                (newY + newHeight < boundMargin))
             {
                 return;
             }
@@ -421,7 +422,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
     }
     
     override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard enableMoving || enableResizing else { return }
+        guard enableMoving || enableDragResizing else { return }
         
         // If a e.g. UITextView isFirstResponder, the touch might be cancelled abruptly
         superview?.endEditing(true)
@@ -437,13 +438,13 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         curAnchor = anchorForTouchLoc(touchStart!)
         
         // When resizing, all calculations are done in the superview's coordinate space.
-        if enableResizing && curAnchor!.isResizing() {
+        if enableDragResizing && curAnchor!.isResizing() {
             touchStart = touch.location(in: superview)
         }
     }
     
     override open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard enableMoving || enableResizing else { return }
+        guard enableMoving || enableDragResizing else { return }
         
         if curAnchor == nil || superview == nil {
             assertionFailure("Shouldn't be nil")
@@ -463,7 +464,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         
         isValidTap = false
         
-        if enableResizing && curAnchor!.isResizing() {
+        if enableDragResizing && curAnchor!.isResizing() {
             resizeUsingTouchLoc(touch.location(in: superview!))
         } else if enableMoving {
             translateUsingTouchLoc(touchPos)
@@ -471,7 +472,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
     }
     
     override open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard enableMoving || enableResizing else { return }
+        guard enableMoving || enableDragResizing else { return }
         
         delegate?.moViewDidEndEditing(self, edited: !isValidTap)
         
@@ -483,7 +484,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
     override open func touchesCancelled(_ touches: Set<UITouch>,
                                         with event: UIEvent?)
     {
-        guard enableMoving || enableResizing else { return }
+        guard enableMoving || enableDragResizing else { return }
         
         delegate?.moViewDidEndEditing(self, edited: !isValidTap)
     }
@@ -492,7 +493,7 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
     func pinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
         curAnchor = centerAnchor
         
-        guard enableResizing else { return }
+        guard enablePinchResizing else { return }
         
         var velocity = gestureRecognizer.velocity;
         // velocity can be NaN or infinity
