@@ -201,28 +201,28 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
         return smallestDist < centerDist * resizeDistanceToCenterFactor ? closestAnchor : noAnchor
     }
     
-    private func superviewContentWidth() -> CGFloat {
+    private func superviewTotalWidth() -> CGFloat {
         guard let superview = superview else {
             return 0
         }
         var boundWidth = superview.bounds.width
-        // If superview is UITextView (the case of Pendo), check contentSize
-        if superview .isKind(of: UITextView.self) {
-            let contentWidth = (superview as! UITextView).contentSize.width
-            boundWidth = max(boundWidth, contentWidth)
+        // If superview is UIScrollView, add contentInset as well
+        if let superview = superview as? UIScrollView {
+            let width = superview.contentSize.width + superview.contentInset.left + superview.contentInset.right
+            boundWidth = max(boundWidth, width)
         }
         return boundWidth
     }
     
-    private func superviewContentHeight() -> CGFloat {
+    private func superviewTotalHeight() -> CGFloat {
         guard let superview = superview else {
             return 0
         }
         var boundHeight = superview.bounds.height
-        // If superview is UITextView (the case of Pendo), check contentSize
-        if superview .isKind(of: UITextView.self) {
-            let contentHeight = (superview as! UITextView).contentSize.height
-            boundHeight = max(boundHeight, contentHeight)
+        // If superview is UIScrollView, add contentInset as well
+        if let superview = superview as? UIScrollView {
+            let height = superview.contentSize.height + superview.contentInset.top + superview.contentInset.bottom
+            boundHeight = max(boundHeight, height)
         }
         return boundHeight
     }
@@ -236,14 +236,14 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
                 if touchPoint.x < border {
                     touchPoint.x = border
                 }
-                if touchPoint.x > superviewContentWidth() - border {
-                    touchPoint.x = superviewContentWidth() - border
+                if touchPoint.x > superviewTotalWidth() - border {
+                    touchPoint.x = superviewTotalWidth() - border
                 }
                 if touchPoint.y < border {
                     touchPoint.y = border
                 }
-                if touchPoint.y > superviewContentHeight() - border {
-                    touchPoint.y = superviewContentHeight() - border
+                if touchPoint.y > superviewTotalHeight() - border {
+                    touchPoint.y = superviewTotalHeight() - border
                 }
             }
             
@@ -318,9 +318,9 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
             let superY = superview!.bounds.origin.y
             if keepRatio {
                 if ((newX < superX && self.frame.origin.x != newX) ||
-                    (newX + newWidth > superX + superviewContentWidth() && self.frame.size.width != newWidth) ||
+                    (newX + newWidth > superX + superviewTotalWidth() && self.frame.size.width != newWidth) ||
                     (newY < superY && self.frame.origin.y != newY ) ||
-                    (newY + newHeight > superY + superviewContentHeight() && self.frame.size.height != newHeight))
+                    (newY + newHeight > superY + superviewTotalHeight() && self.frame.size.height != newHeight))
                 {
                     return;
                 }
@@ -334,9 +334,9 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
                     newWidth = max(newWidth, minWidth)
                 }
                 // right
-                if (newX + newWidth > superX + superviewContentWidth() &&
+                if (newX + newWidth > superX + superviewTotalWidth() &&
                     self.frame.size.width != newWidth) {
-                    newWidth = superviewContentWidth() - newX;
+                    newWidth = superviewTotalWidth() - newX;
                     newWidth = max(newWidth, minWidth)
                 }
                 // top
@@ -348,16 +348,16 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
                     newHeight = max(newHeight, minHeight)
                 }
                 // bottom
-                if (newY + newHeight > superviewContentHeight() &&
+                if (newY + newHeight > superviewTotalHeight() &&
                     self.frame.size.height != newHeight) {
-                    newHeight = superviewContentHeight() - newY;
+                    newHeight = superviewTotalHeight() - newY;
                     newHeight = max(newHeight, minHeight)
                 }
             }
         } else { // even without the option, don't want image completely out of screen
-            if ((newX > superview!.bounds.width - boundMargin) ||
+            if ((newX > superviewTotalWidth() - boundMargin) ||
                 (newX + newWidth < boundMargin) ||
-                (newY > superview!.bounds.height - boundMargin) ||
+                (newY > superviewTotalHeight() - boundMargin) ||
                 (newY + newHeight < boundMargin))
             {
                 return;
@@ -389,10 +389,10 @@ open class MoView: UIView, UIGestureRecognizerDelegate {
             verticalMargin = bounds.height
         }
         let minCenterX = max(minX + halfWidth, 0 + horizontalMargin - halfWidth)
-        let maxCenterX = superviewContentWidth() - horizontalMargin + halfWidth
+        let maxCenterX = superviewTotalWidth() - horizontalMargin + halfWidth
         
         let minCenterY = max(minY + halfHeight, 0 + verticalMargin - halfHeight)
-        let maxCenterY = superviewContentHeight() - verticalMargin + halfHeight
+        let maxCenterY = superviewTotalHeight() - verticalMargin + halfHeight
         
         guard minCenterX <= maxCenterX, minCenterY <= maxCenterY else {
             assertionFailure("Condition not right: minCenterX:\(minCenterX) maxCenterX:\(maxCenterX) minCenterY:\(minCenterY) maxCenterY:\(maxCenterY) ")
