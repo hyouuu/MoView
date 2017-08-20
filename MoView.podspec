@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = "MoView"
-  s.version          = "1.2.3"
-  s.summary          = "macOS support"
+  s.version          = "1.2.4"
+  s.summary          = "MoView is a movable & resizable view for both iOS & macOS"
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description      = <<-DESC
-  MoView is a movable & resizable view for both iOS & macOS
+  MoView is a movable & resizable view for both iOS & macOS, which works perfectly with images
   DESC
 
   s.homepage         = "https://github.com/hyouuu/MoView"
