@@ -6,21 +6,21 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
 #
 
-Pod::Spec.new do |s|
-  s.name             = "MoView"
-  s.version          = "1.3.0"
+Pod::Spec.new do |spec|
+  spec.name             = 'MoView'
+  spec.version          = '1.3.0'
+  spec.license          = 'MIT'
+  spec.homepage         = 'https://github.com/hyouuu/MoView'
+  spec.authors          = { 'hyouuu' => 'hyouuu@gmail.com' }
+  spec.summary          = 'MoView is a movable & resizable view for both iOS & macOS'
+  spec.source           = { :git => 'https://github.com/hyouuu/MoView.git', :tag => spec.version.to_s }
 
-  s.license          = 'MIT'
-  s.homepage         = "https://github.com/hyouuu/MoView"
-  s.authors          = { "hyouuu" => "hyouuu@gmail.com" }
-  s.summary          = "MoView is a movable & resizable view for both iOS & macOS"
-  s.source           = { :git => "https://github.com/hyouuu/MoView.git", :tag => s.version.to_s }
+  spec.ios.deployment_target = '9.0'
+  spec.osx.deployment_target = '10.12'
 
-  s.ios.deployment_target = "8.0"
-  s.osx.deployment_target = "10.12"
+  #spec.source_files = 'MoView/**/*.swift'
+  spec.ios.source_files = 'MoView/ios/*.swift'
+  spec.osx.source_files = 'MoView/osx/*.swift'
 
-  s.ios.source_files = 'ios/*.swift'
-  s.osx.source_files = 'osx/*.swift'
-
-  s.requires_arc = true
+  spec.requires_arc = true
 end
