@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = "MoView"
-  s.version          = "1.1.0"
-  s.summary          = "MoView is a movable, resizable view, with special attention to be used with UIImage, thus providing Save, Copy and Delete menu options."
+  s.version          = "1.2.0"
+  s.summary          = "MoView is a movable & resizable view for both iOS & macOS"
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -19,21 +19,16 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
   MoView by hyouuu, made for Pendo, based on SPUserResizableView.
 
-  It is a movable, resizable view, with special attention to be used with UIImage, thus providing Save, Copy and Delete menu options.
+  It is a movable & resizable view, with Save, Copy and Delete menu options.
                        DESC
 
   s.homepage         = "https://github.com/hyouuu/MoView"
   s.license          = 'MIT'
   s.author           = { "hyouuu" => "hyouuu@gmail.com" }
   s.source           = { :git => "https://github.com/hyouuu/MoView.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes/**/*'
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
