@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MoView"
-  s.version          = "1.2.0"
+  s.version          = "1.2.1"
   s.summary          = "MoView is a movable & resizable view for both iOS & macOS"
 
 # This description is used to generate tags and improve search results.
@@ -17,17 +17,16 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description      = <<-DESC
-  MoView by hyouuu, made for Pendo, based on SPUserResizableView.
-
-  It is a movable & resizable view, with Save, Copy and Delete menu options.
-                       DESC
+  MoView is a movable & resizable view for both iOS & macOS
+  DESC
 
   s.homepage         = "https://github.com/hyouuu/MoView"
   s.license          = 'MIT'
   s.author           = { "hyouuu" => "hyouuu@gmail.com" }
   s.source           = { :git => "https://github.com/hyouuu/MoView.git", :tag => s.version.to_s }
 
-  s.platform     = :ios, '8.0'
+  s.ios.platform = :ios, "8.0"
+  s.osx.platform = :osx, "10.12"
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes/**/*'
