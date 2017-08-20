@@ -2,9 +2,9 @@
 
 MoView by hyouuu, made for Pendo, based on [SPUserResizableView](https://github.com/spoletto/SPUserResizableView).    
 
-It is a movable, resizable view, with special attention to be used with UIImage, thus providing Save, Copy and Delete menu options.
+It is a movable & resizable view for both iOS & macOS, with works perfectly with images, and provides Save, Copy and Delete menu options.
 
-It has been used by Pendo in App Store with lots of users, so is considered production ready. Pull requests welcome to make it better & better! :D
+It has been used by Pendo in App Store with lots of users, so is considered production ready. Pull requests are always welcome!
 
 [![Version](https://img.shields.io/cocoapods/v/MoView.svg?style=flat)](http://cocoapods.org/pods/MoView)
 [![License](https://img.shields.io/cocoapods/l/MoView.svg?style=flat)](http://cocoapods.org/pods/MoView)

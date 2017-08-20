@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MoView"
-  s.version          = "1.2.4"
+  s.version          = "1.2.5"
   s.summary          = "MoView is a movable & resizable view for both iOS & macOS"
 
 # This description is used to generate tags and improve search results.
@@ -25,9 +25,10 @@ Pod::Spec.new do |s|
   s.author           = { "hyouuu" => "hyouuu@gmail.com" }
   s.source           = { :git => "https://github.com/hyouuu/MoView.git", :tag => s.version.to_s }
 
+  spec.ios.source_files = 'Classes/ios/**/*'
+  spec.osx.source_files = 'Classes/osx/**/*'
+
   s.ios.deployment_target = "8.0"
   s.osx.deployment_target = "10.12"
   s.requires_arc = true
-
-  s.source_files = 'Pod/Classes/**/*'
 end
