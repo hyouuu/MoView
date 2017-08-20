@@ -12,6 +12,9 @@ It has been used by Pendo in App Store with lots of users, so is considered prod
 
 ![alt tag](intro.gif)
 
+## Note
+Seems like CocoaPod doesn't work well with multi platform support (or maybe the podspec setup is wrong?), thus currently please directly copy paste MoView and MacMoView into your project. If you are a CocoaPod expert and could find out what's wrong it'd be super helpful!
+
 ## Usage
 
 In your view controller:
