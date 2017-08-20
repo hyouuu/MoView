@@ -13,9 +13,11 @@
 #if os(iOS)
     import UIKit
     typealias MoViewParent = UIView
+    typealias Image = UIImage
 #else
     import AppKit
     typealias MoViewParent = NSView
+    typealias Image = NSImage
 #endif
 
 public protocol MoViewDelegate: class {
@@ -32,7 +34,7 @@ public protocol MoViewDelegate: class {
     func moViewRequestImage(_ moView: MoView) -> Image?
 }
 
-open class MoView: MoViewParent {
+class MoView: MoViewParent {
     
     // MARK: Static Vars
 
