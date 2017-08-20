@@ -137,7 +137,7 @@ open class MoView: MoViewParent {
     // MARK: Private Vars
 
     // Will be initiated when the MoView's frame is set to keep ratio
-    private var initialViewSize = CGSize.zero
+    fileprivate var initialViewSize = CGSize.zero
 
     override open var frame: CGRect {
         didSet {
@@ -148,7 +148,7 @@ open class MoView: MoViewParent {
 
     #if os(iOS) // MARK: iOS Private Vars
 
-    private struct MoViewAnchor {
+    fileprivate struct MoViewAnchor {
         var adjustsX: CGFloat
         var adjustsY: CGFloat
         var adjustsH: CGFloat
@@ -159,39 +159,39 @@ open class MoView: MoViewParent {
         }
     }
 
-    private struct MoViewPointToAnchor {
+    fileprivate struct MoViewPointToAnchor {
         var point: CGPoint
         var anchor: MoViewAnchor
     }
 
     // If touch moves, invalid this so at touchEnd we know if it's a tap or drag
-    private var isValidTap = true
+    fileprivate var isValidTap = true
 
-    private let noAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 0, adjustsH: 0, adjustsW: 0)
+    fileprivate let noAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 0, adjustsH: 0, adjustsW: 0)
 
-    private let centerAnchor = MoViewAnchor(adjustsX: 0.5, adjustsY: 0.5, adjustsH: 1, adjustsW: 1)
+    fileprivate let centerAnchor = MoViewAnchor(adjustsX: 0.5, adjustsY: 0.5, adjustsH: 1, adjustsW: 1)
 
-    private let upperLeftAnchor = MoViewAnchor(adjustsX: 1, adjustsY: 1, adjustsH: -1, adjustsW: 1)
-    private let midLeftAnchor = MoViewAnchor(adjustsX: 1, adjustsY: 0, adjustsH: 0, adjustsW: 1)
-    private let lowerLeftAnchor = MoViewAnchor(adjustsX: 1, adjustsY: 0, adjustsH: 1, adjustsW: 1)
-    private let upperMidAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 1, adjustsH: -1, adjustsW: 0)
-    private let upperRightAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 1, adjustsH: -1, adjustsW: -1)
-    private let midRightAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 0, adjustsH: 0, adjustsW: -1)
-    private let lowerRightAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 0, adjustsH: 1, adjustsW: -1)
-    private let lowerMidAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 0, adjustsH: 1, adjustsW: 0)
+    fileprivate let upperLeftAnchor = MoViewAnchor(adjustsX: 1, adjustsY: 1, adjustsH: -1, adjustsW: 1)
+    fileprivate let midLeftAnchor = MoViewAnchor(adjustsX: 1, adjustsY: 0, adjustsH: 0, adjustsW: 1)
+    fileprivate let lowerLeftAnchor = MoViewAnchor(adjustsX: 1, adjustsY: 0, adjustsH: 1, adjustsW: 1)
+    fileprivate let upperMidAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 1, adjustsH: -1, adjustsW: 0)
+    fileprivate let upperRightAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 1, adjustsH: -1, adjustsW: -1)
+    fileprivate let midRightAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 0, adjustsH: 0, adjustsW: -1)
+    fileprivate let lowerRightAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 0, adjustsH: 1, adjustsW: -1)
+    fileprivate let lowerMidAnchor = MoViewAnchor(adjustsX: 0, adjustsY: 0, adjustsH: 1, adjustsW: 0)
 
     // Used to determine which components of the bounds we'll be modifying, based upon where the user's touch started.
-    private var curAnchor: MoViewAnchor?
+    fileprivate var curAnchor: MoViewAnchor?
 
-    private var touchStart: CGPoint?
+    fileprivate var touchStart: CGPoint?
 
     #else  // MARK: Mac Private Vars
 
-    private var dragStartScreenPoint = NSPoint.zero
-    private var superviewScreenFrame = NSRect.zero
+    fileprivate var dragStartScreenPoint = NSPoint.zero
+    fileprivate var superviewScreenFrame = NSRect.zero
 
-    private var cursor: NSCursor?
-    private var trackingArea: NSTrackingArea?
+    fileprivate var cursor: NSCursor?
+    fileprivate var trackingArea: NSTrackingArea?
 
     #endif
 
@@ -256,13 +256,13 @@ open class MoView: MoViewParent {
 extension MoView {
 
     // Helper for fast distance comparison
-    private func distSquared(_ a: CGPoint, b: CGPoint) -> CGFloat {
+    fileprivate func distSquared(_ a: CGPoint, b: CGPoint) -> CGFloat {
         let dx = (b.x - a.x)
         let dy = (b.y - a.y)
         return (dx * dx) + (dy * dy)
     }
 
-    private func anchorForTouchLoc(_ touchPoint: CGPoint) -> MoViewAnchor {
+    fileprivate func anchorForTouchLoc(_ touchPoint: CGPoint) -> MoViewAnchor {
         let width = bounds.width
         let height = bounds.height
         let centerPoint = CGPoint(x: width / 2, y: height / 2)
@@ -295,7 +295,7 @@ extension MoView {
         return smallestDist < centerDist * resizeDistanceToCenterFactor ? closestAnchor : noAnchor
     }
 
-    private func superviewTotalWidth() -> CGFloat {
+    fileprivate func superviewTotalWidth() -> CGFloat {
         guard let superview = superview else {
             return 0
         }
@@ -308,7 +308,7 @@ extension MoView {
         return boundWidth
     }
 
-    private func superviewTotalHeight() -> CGFloat {
+    fileprivate func superviewTotalHeight() -> CGFloat {
         guard let superview = superview else {
             return 0
         }
@@ -321,7 +321,7 @@ extension MoView {
         return boundHeight
     }
 
-    private func resizeUsingTouchLoc(_ touchPoint: CGPoint) {
+    fileprivate func resizeUsingTouchLoc(_ touchPoint: CGPoint) {
         var touchPoint = touchPoint
         if let anchor = curAnchor, let touchStart = touchStart {
             // (1) Update the touch point if we're outside the superview.
@@ -353,7 +353,7 @@ extension MoView {
         }
     }
 
-    private func resizeWith(_ deltaW: CGFloat, deltaX: CGFloat, deltaH: CGFloat, deltaY: CGFloat) {
+    fileprivate func resizeWith(_ deltaW: CGFloat, deltaX: CGFloat, deltaH: CGFloat, deltaY: CGFloat) {
         var deltaW = deltaW, deltaX = deltaX, deltaH = deltaH, deltaY = deltaY
         if curAnchor == nil {
             assertionFailure("Shouldn't be nil")
@@ -456,7 +456,7 @@ extension MoView {
         self.frame = CGRect(x: newX, y: newY, width: newWidth, height: newHeight);
     }
 
-    private func translateUsingTouchLoc(_ touchPoint: CGPoint) {
+    fileprivate func translateUsingTouchLoc(_ touchPoint: CGPoint) {
         guard let touchStart = touchStart,
             let _ = superview else
         {
