@@ -516,7 +516,7 @@ extension MoView: UIGestureRecognizerDelegate {
         delegate?.moViewDidEndEditing(self, edited: !isValidTap)
     }
 
-    func pinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
+    @objc func pinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
         curAnchor = centerAnchor
 
         guard enablePinchResizing else { return }
@@ -569,7 +569,7 @@ extension MoView: UIGestureRecognizerDelegate {
         return false
     }
 
-    func longPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+    @objc func longPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if gestureRecognizer.state == .began {
             self.showMenu()
         }
